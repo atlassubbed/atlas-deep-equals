@@ -1,5 +1,5 @@
 {
-  "name": "atlas-equals",
+  "name": "atlas-deep-equals",
   "version": "1.0.0",
   "description": "Recursively tests deep or shallow equality for primitive structures.",
   "scripts": {
