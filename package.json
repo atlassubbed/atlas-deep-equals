@@ -1,13 +1,22 @@
 {
-  "name": "atlas-deep-equals",
+  "name": "atlas-equals",
   "version": "1.0.0",
-  "description": "Recursively tests deep equality.",
+  "description": "Recursively tests deep or shallow equality for primitive structures.",
   "scripts": {
     "test-server": "mocha --colors --watch --recursive './test/**/*.test.js'",
     "test": "mocha --colors --recursive './test/**/*.test.js'"
   },
-  "main": "./src/index.js",
-  "keywords": [],
+  "main": "./src/equals.js",
+  "keywords": [
+    "atlassubbed",
+    "utils",
+    "utility",
+    "recursive",
+    "deep",
+    "shallow",
+    "equals",
+    "equality"
+  ],
   "author": "atlassubbed <atlassubbed@gmail.com>",
   "license": "Apache-2.0",
   "devDependencies": {
