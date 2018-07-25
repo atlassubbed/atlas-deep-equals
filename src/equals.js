@@ -1,44 +1,39 @@
-const { isArr, isDate, isRegExp, protoOf, primEquals } = require("./util");
+const isArr = Array.isArray;
+const keys = Object.keys;
+const has = Object.prototype.hasOwnProperty
+const isObj = obj => typeof obj === "object";
 
 // deep or shallow equals primitive nested structures
-const equalsFast = (a, b, deep) => {
-  if (a === b) return true;
-  if (!(a && b && typeof a === "object" && typeof b === "object")) return false;
-  if (isArr(a)){
-    if (!isArr(b)) return false;
-    let n = a.length;
-    if (n !== b.length) return false;
-    while(n--) if (deep ? !equalsFast(a[n],b[n],deep) : a[n] !== b[n]) return false;
-    return true;
-  }
-  let numKeys1 = 0;
-  for (let f in a){
-    if (!(f in b && deep ? equalsFast(a[f],b[f],deep) : a[f] === b[f])) return false;
-    numKeys1++;
-  }
-  return numKeys1 === Object.keys(b).length;
-}
-
-// same as above but test NaN and complex objects
+// caller is responsible for:
+//   storing date/regex/class as primitives
+//   understanding that NaN !== NaN
 const equals = (a, b, deep) => {
-  const p = primEquals(a, b);
-  if (p !== undefined) return p;
-  if (isDate(a)) return isDate(b) && a.valueOf() === b.valueOf();
-  if (isRegExp(a)) return isRegExp(b) && a.toString() === b.toString();
+  if (a === b) return true;
+  if (!(a && b && isObj(a) && isObj(b))) return false;
   if (isArr(a)){
     if (!isArr(b)) return false;
     let n = a.length;
     if (n !== b.length) return false;
-    while(n--) if (!(deep ? equals(a[n],b[n],deep) : primEquals(a[n], b[n])))return false;
+    if (deep) while(n--) {
+      if (!equals(a[n], b[n], true)) return false;
+    } else while(n--) {
+      if (a[n] !== b[n]) return false;
+    }
     return true;
   }
-  if (protoOf(a) !== protoOf(b)) return false;
-  let numKeys1 = 0;
-  for (let f in a){
-    if (!(f in b && deep ? equals(a[f],b[f],deep) : primEquals(a[f], b[f]))) return false;
-    numKeys1++;
+  let keysA = keys(a), n, m, k;
+  n = m = keysA.length;
+  // avoid recursion, fails fast
+  if (deep){
+    if (n !== keys(b).length) return false;
+    while(n--) if (!has.call(b, keysA[n])) return false;
+    while(m--) if (!equals(a[k = keysA[m]], b[k], true)) return false;
+    return true;
   }
-  return numKeys1 === Object.keys(b).length;
+  while (n--) {
+    if (!has.call(b, k = keysA[n]) || a[k] !== b[k]) return false;
+  }
+  return m === keys(b).length;
 }
 
-module.exports = { equals, equalsFast }
+module.exports = equals
