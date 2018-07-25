@@ -26,7 +26,7 @@ First, import the `equals` function:
 const equals = require("atlas-deep-equals");
 ```
 
-### shallow comparisons
+#### shallow comparisons
 
 If you know your data is not nested or you are using immutable subtrees, simply perform a shallow equals:
 
@@ -38,7 +38,7 @@ equals(props1, props2)
 // false
 ```
 
-### deep comparisons
+#### deep comparisons
 
 If you have nested data and are not using immutability, then you can pass `true` as a third argument to perform a recursive comparison:
 
@@ -70,7 +70,7 @@ equals(props1, props2, isDeep);
 // true
 ```
 
-### immutability
+#### immutability
 
 Immutable objects make use of strict reference equality (`===`) to perform fast comparisons regardless of how nested the data is. Every time an immutable object receives an update, a brand new reference will be returned that points to the new version of the object.
 
@@ -82,7 +82,7 @@ Similarly, if `props1` and `props2` are mutable, but their top-level fields are 
 
 ## caveats
 
-### `Date`, `RegExp`
+#### `Date` and `RegExp`
 
 Deep-equality libraries tend to make exceptions for commonly used objects:
 
@@ -95,10 +95,10 @@ if (isRegExp(a)) return isRegExp(b) && a.toString() === b.toString();
 
 This library doesn't. If a complex type can be reduced to a primitive, it makes more sense for the caller to normalize the input than for `equals` to guess what non-primitives the caller is using.
 
-### `NaN`
+#### `NaN`
 
 `NaN` usually arises in javascript because of an error in some logic -- `equals` assumes `NaN` is taken care of by the caller. Testing for `NaN` in `equals` would be trivial, but seems unnecessary; I may decide to add a `NaN` check later, though.
 
-### plain old javascript objects
+#### plain old javascript objects
 
-Unless you are using some sort of immutable object (making deep `equals` irrelevant), `equals` expects
+Unless you are using some sort of immutable object (making deep `equals` irrelevant), `equals` expects simple object and array literals, and primitive types. Using complicated types like `Date` and `MyClass` may not result in expected behavior.
