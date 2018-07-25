@@ -86,7 +86,7 @@ Similarly, if `props1` and `props2` are mutable, but their top-level fields are 
 
 Deep-equality libraries tend to make exceptions for commonly used objects:
 
-```
+```javascript
 ...
 if (isDate(a)) return isDate(b) && a.valueOf() === b.valueOf();
 if (isRegExp(a)) return isRegExp(b) && a.toString() === b.toString();
